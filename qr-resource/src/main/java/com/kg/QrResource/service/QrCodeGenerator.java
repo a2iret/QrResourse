@@ -1,9 +1,9 @@
 package com.kg.QrResource.service;
 
-import com.kg.QrResource.model.QrCode;
+import com.kg.QrResource.model.Payment;
 
 public interface QrCodeGenerator {
-    byte[] generateQrCode(QrCode qrCode);
+    byte[] generateQrCode(Payment payment);
 
     String readQRCode(byte[] imageBytes);
 }

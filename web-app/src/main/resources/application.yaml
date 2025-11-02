@@ -8,3 +8,7 @@ server:
 payment:
   qr:
     url: http:8080//localhost/api/payments/pay
+
+secret:
+  HmacSHA256:
+    key: uRQEXI1Yxqj5nBzn3GLOjmUphTNKUU0flXTS2OvrvL0=
