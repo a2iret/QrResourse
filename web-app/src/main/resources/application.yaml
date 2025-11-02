@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: web-app
+
+server:
+  port: 8080
+
+payment:
+  qr:
+    url: http:8080//localhost/api/payments/pay

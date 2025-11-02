@@ -3,12 +3,14 @@ package com.kg.QrResource.model;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Builder
 @Data
 public class QrCode {
-    private Integer size;
     private QrCodeType type;
-    private String data;
+    private Boolean isSumEditable;
+    private BigDecimal sum;
 
     private enum QrCodeType {
         STATIC, DYNAMIC
