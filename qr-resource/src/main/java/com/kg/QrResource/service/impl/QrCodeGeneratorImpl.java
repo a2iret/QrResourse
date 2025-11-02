@@ -1,5 +1,8 @@
 package com.kg.QrResource.service.impl;
 
+import com.google.gson.Gson;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.kg.QrResource.model.QrCode;
 import com.kg.QrResource.service.QrCodeGenerator;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
@@ -7,6 +10,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -15,19 +20,34 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
 public class QrCodeGeneratorImpl implements QrCodeGenerator {
 
+    @Value("${payment.qr.url}")
+    private String paymentUrl;
+
     @Override
-    public byte[] generateQrCode(String link) {
+    public byte[] generateQrCode(QrCode qrCode) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             int height = 350;
             int width = 350;
 
-            BitMatrix bitMatrix = qrCodeWriter.encode(link, BarcodeFormat.QR_CODE, width, height);
+            Map<EncodeHintType, ErrorCorrectionLevel> properties = new HashMap<>();
+
+            // Put the lowest error correction 7%
+            properties.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+
+            String jsonData = new Gson().toJson(qrCode);
+            String base64 = Base64.getEncoder().encodeToString(jsonData.getBytes(StandardCharsets.UTF_8));
+            String url = paymentUrl + "?data=" + base64;
+            BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, width, height, properties);
 
             BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D graphics = bufferedImage.createGraphics();

@@ -1,9 +1,9 @@
 package com.kg.QrResource.service;
 
-import java.io.IOException;
+import com.kg.QrResource.model.QrCode;
 
 public interface QrCodeGenerator {
-    byte[] generateQrCode(String link);
+    byte[] generateQrCode(QrCode qrCode);
 
-    String readQRCode(byte[] imageBytes) throws IOException;
+    String readQRCode(byte[] imageBytes);
 }

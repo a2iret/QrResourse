@@ -1,13 +1,11 @@
-package com.kg.QrResource;
+package com.kg;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class QrResourceApplication {
-
+public class WebApp {
     public static void main(String[] args) {
-        SpringApplication.run(QrResourceApplication.class, args);
+        SpringApplication.run(WebApp.class, args);
     }
-
 }
