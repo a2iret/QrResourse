@@ -9,8 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>qr-resource</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>web-config</artifactId>
 
     <properties>
         <maven.compiler.source>22</maven.compiler.source>
@@ -20,21 +19,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.kg</groupId>
             <artifactId>utility</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
+
 </project>

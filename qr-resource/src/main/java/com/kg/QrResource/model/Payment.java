@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Builder
 @Data
-public class QrCode {
+public class Payment {
     private QrCodeType type;
     private Boolean isSumEditable;
     private BigDecimal sum;

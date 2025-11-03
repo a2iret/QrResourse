@@ -23,6 +23,12 @@
             <artifactId>qr-resource</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.kg</groupId>
+            <artifactId>web-config</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

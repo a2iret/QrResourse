@@ -1,17 +1,17 @@
 package com.kg.QrResource.service.impl;
 
 import com.google.gson.Gson;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.kg.QrResource.model.QrCode;
-import com.kg.QrResource.service.QrCodeGenerator;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.kg.QrResource.model.Payment;
+import com.kg.QrResource.service.QrCodeGenerator;
+import com.kg.utility.HMAC;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -32,8 +32,11 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
     @Value("${payment.qr.url}")
     private String paymentUrl;
 
+    @Value("${secret.HmacSHA256.key}")
+    private String secretKey;
+
     @Override
-    public byte[] generateQrCode(QrCode qrCode) {
+    public byte[] generateQrCode(Payment payment) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             int height = 350;
@@ -44,9 +47,14 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
             // Put the lowest error correction 7%
             properties.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 
-            String jsonData = new Gson().toJson(qrCode);
+            // Base64 format
+            String jsonData = new Gson().toJson(payment);
             String base64 = Base64.getEncoder().encodeToString(jsonData.getBytes(StandardCharsets.UTF_8));
-            String url = paymentUrl + "?data=" + base64;
+
+            // Sign with Hmac
+            String signature = generateSignature(payment);
+
+            String url = paymentUrl + "?data=" + base64 + "&signature=" + signature;
             BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, width, height, properties);
 
             BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -71,6 +79,13 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
             log.error("Error writing an image", e);
         }
         return new byte[0];
+    }
+
+    private String generateSignature(Payment payment) {
+        String method = "POST";
+        String data = new Gson().toJson(payment);
+        String requestedData = String.join(",", method, paymentUrl, data);
+        return HMAC.hmacSHA256Digest(requestedData, secretKey);
     }
 
     @Override
