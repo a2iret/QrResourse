@@ -49,12 +49,14 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
 
             // Base64 format
             String jsonData = new Gson().toJson(payment);
+            log.info("Json data: {}", jsonData);
             String base64 = Base64.getEncoder().encodeToString(jsonData.getBytes(StandardCharsets.UTF_8));
 
             // Sign with Hmac
             String signature = generateSignature(payment);
 
             String url = paymentUrl + "?data=" + base64 + "&signature=" + signature;
+            log.info("url: {}", url);
             BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, width, height, properties);
 
             BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
