@@ -1,4 +1,4 @@
-package com.kg.web;
+package com.kg.resources;
 
 import com.kg.QrResource.model.Payment;
 import com.kg.QrResource.service.QrCodeGenerator;
