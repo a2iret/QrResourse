@@ -9,18 +9,18 @@
   </parent>
 
   <groupId>com.kg</groupId>
-  <artifactId>payment-system</artifactId>
+  <artifactId>qrPayment-system</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>payment-system</name>
+  <name>qrPayment-system</name>
 
   <modules>
     <module>qr-resource</module>
     <module>web-app</module>
-    <module>payment</module>
     <module>web-config</module>
     <module>utility</module>
+    <module>payment</module>
   </modules>
 
   <properties>

@@ -7,9 +7,11 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.kg.QrResource.model.Payment;
+import com.kg.QrResource.events.publisher.QrCodeEventPublisher;
+import com.kg.QrResource.model.QrPayment;
 import com.kg.QrResource.service.QrCodeGenerator;
 import com.kg.utility.HMAC;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class QrCodeGeneratorImpl implements QrCodeGenerator {
 
     @Value("${payment.qr.url}")
@@ -35,8 +38,10 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
     @Value("${secret.HmacSHA256.key}")
     private String secretKey;
 
+    private final QrCodeEventPublisher qrCodeEventPublisher;
+
     @Override
-    public byte[] generateQrCode(Payment payment) {
+    public byte[] generateQrCode(QrPayment qrPayment) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             int height = 350;
@@ -48,12 +53,12 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
             properties.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 
             // Base64 format
-            String jsonData = new Gson().toJson(payment);
+            String jsonData = new Gson().toJson(qrPayment);
             log.info("Json data: {}", jsonData);
             String base64 = Base64.getEncoder().encodeToString(jsonData.getBytes(StandardCharsets.UTF_8));
 
             // Sign with Hmac
-            String signature = generateSignature(payment);
+            String signature = generateSignature(qrPayment);
 
             String url = paymentUrl + "?data=" + base64 + "&signature=" + signature;
             log.info("url: {}", url);
@@ -73,6 +78,10 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
             }
             ByteArrayOutputStream bas = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "png", bas);
+
+            // Publish qr code creation event
+            qrCodeEventPublisher.publishQrCodeCreationEvent(qrPayment);
+
             return bas.toByteArray();
 
         } catch (WriterException e) {
@@ -83,9 +92,9 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
         return new byte[0];
     }
 
-    private String generateSignature(Payment payment) {
+    private String generateSignature(QrPayment qrPayment) {
         String method = "POST";
-        String data = new Gson().toJson(payment);
+        String data = new Gson().toJson(qrPayment);
         String requestedData = String.join(",", method, paymentUrl, data);
         return HMAC.hmacSHA256Digest(requestedData, secretKey);
     }
