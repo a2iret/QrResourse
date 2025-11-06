@@ -1,6 +1,6 @@
 package com.kg.resources;
 
-import com.kg.QrResource.model.Payment;
+import com.kg.QrResource.model.QrPayment;
 import com.kg.QrResource.service.QrCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,8 +15,8 @@ public class QrResource {
     private final QrCodeGenerator qrCodeGenerator;
 
     @PostMapping("generate/qr")
-    public ResponseEntity<byte[]> generateQr(@RequestBody Payment payment) {
-        byte[] link = qrCodeGenerator.generateQrCode(payment);
+    public ResponseEntity<byte[]> generateQr(@RequestBody QrPayment qrPayment) {
+        byte[] link = qrCodeGenerator.generateQrCode(qrPayment);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
         return ResponseEntity.ok().headers(headers).body(link);

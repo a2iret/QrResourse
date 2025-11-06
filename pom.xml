@@ -18,9 +18,9 @@
   <modules>
     <module>qr-resource</module>
     <module>web-app</module>
-    <module>payment</module>
     <module>web-config</module>
     <module>utility</module>
+    <module>payment</module>
   </modules>
 
   <properties>
