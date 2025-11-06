@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.kg</groupId>
-        <artifactId>qrPayment-system</artifactId>
+        <artifactId>payment-system</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
