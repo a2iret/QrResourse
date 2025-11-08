@@ -1,4 +1,4 @@
-package com.kg.web;
+package com.kg.resources;
 
 import com.kg.annotations.ValidateHmacSHA256;
 import lombok.RequiredArgsConstructor;

@@ -12,3 +12,7 @@ payment:
 secret:
   HmacSHA256:
     key: uRQEXI1Yxqj5nBzn3GLOjmUphTNKUU0flXTS2OvrvL0=
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr([%thread]){faint} %clr(%-5level) %clr(%logger{36}){cyan} - | %X{qrTransactionId} | %msg%n"
